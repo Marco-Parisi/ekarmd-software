@@ -1,5 +1,5 @@
 # **Muon Detector Reader**  
-**Muon Detector Reader** is a **C#** software that analyzes data produced by [Ekar-Muon-Detector](https://github.com/Marco-Parisi/Ekar-Muon-Detector), correcting them based on atmospheric pressure and temperature. The software generates various interactive graphs to study the trend of muon flux over time.  
+**Muon Detector Reader** is a **C#** software that analyzes data produced by [EKAR Muon Detector](https://github.com/Marco-Parisi/ekar-hardware), correcting them based on atmospheric pressure and temperature. The software generates various interactive graphs to study the trend of muon flux over time.  
 
 ## **Data Download**
 EKAR Data can be downloaded here: [ekarmuondetector.org](https://ekarmuondetector.org/)

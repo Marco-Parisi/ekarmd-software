@@ -172,7 +172,7 @@
                                                         </ToolTip>
                                                     </TextBlock.ToolTip>
                                                 </TextBlock>
-                                                <CheckBox Width="18" Name="TempCorrBox" IsEnabled="False" Click="TempCorrBox_Click">
+                                                <CheckBox Width="18" Name="TempCorrBox" IsEnabled="False" Click="TempCorrBox_Click" IsChecked="True">
                                                     <CheckBox.ToolTip>
                                                         <ToolTip Background="OrangeRed">
                                                             <TextBlock Foreground="Black" FontWeight="Bold">
@@ -264,7 +264,7 @@
                         <Run Text="FORMATO DEI DATI" 
                              FontWeight="Bold" 
                              TextDecorations="Underline"/>
-                        <Run Text=" (Separatori accettati: virgola '*' oppure asterisco ',')" 
+                        <Run Text=" (Separatori accettati: virgola ',' oppure asterisco '*')" 
                              FontSize="18" 
                              Foreground="DimGray"
                              FontStyle="Italic"/>
@@ -360,7 +360,7 @@
                         <LineBreak/>
                         
                         <Run Text="•" FontWeight="Bold"/>
-                        <Run Text="Quando l'intervallo di date è ≤ di 3 giorni, comparirà l'intervallo di confidenza dei dati."/>     
+                        <Run Text="Quando l'intervallo di date è ≤ di 1 giorno, comparirà l'intervallo di confidenza dei dati."/>     
                         <LineBreak/>  
                         <Run Text="•" FontWeight="Bold"/>
                         <Run Text="Altre info: "/>     

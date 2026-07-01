@@ -38,6 +38,9 @@ namespace MuonDetectorReader
 
             Grid grid = new Grid() { Margin = new Thickness(5) };
 
+            if (MainWindow.SilentDataCorrection && ParName.Contains("Conteggi"))
+                dot = true;
+
             Button resetButton = new Button()
             {
                 Visibility = Visibility.Collapsed,
@@ -155,17 +158,17 @@ namespace MuonDetectorReader
             {
                 PlotType = PlotType.XY,
                 PlotMargins = new OxyThickness(double.NaN, 0, double.NaN, double.NaN),
-                LegendBackground = OxyColor.FromArgb(170,180,180,180),
+                LegendBackground = OxyColor.FromArgb(170, 180, 180, 180),
                 LegendTitleColor = OxyColors.Black,
-                LegendTitleFontSize = 14,
+                LegendTitleFontSize = 12,
                 LegendTitleFont = "Arial",
                 LegendTitle = "Media = " + Math.Round(fsPointsMean, i) + "\n Max = " + Math.Round(fsPointsMax, i) + "\n Min = " + Math.Round(fsPointsMin, i),
                 LegendMaxHeight = 80,
                 LegendMaxWidth = 170,
                 LegendPosition = LegendPosition.TopRight,
-                Title = MainWindow.GraphTitle,
+                Title = MainWindow.SilentDataCorrection ? ParName.Split('(')[0] + " {Δt = 14 giorni}" : MainWindow.GraphTitle,
                 TitleFontSize = 14,
-                Subtitle = "File: " + MainWindow.FileName + " | Dati: " + Dates.Count.ToString(),
+                Subtitle = MainWindow.SilentDataCorrection ? "" : "File: " + MainWindow.FileName + " | Dati: " + Dates.Count.ToString(),
             };
 
             if (ParName.Contains("Conteggi"))
@@ -177,10 +180,10 @@ namespace MuonDetectorReader
 
             LinearAxis yAxis = new LinearAxis()
             {
-                Title = ParName,
+                Title = ParName.Contains("Conteggi Corretti") ? "% from avg" : ParName,
                 AxisTitleDistance = 20,
                 IntervalLength = 30,
-                MajorGridlineStyle = LineStyle.Dash,
+                MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.Dot,
                 Maximum = fsPointsMax + (fsPointsMax / Div),
                 Minimum = fsPointsMin - (fsPointsMin / Div),
@@ -189,7 +192,7 @@ namespace MuonDetectorReader
             if (ParName.Contains("Conteggi"))
             {
                 fs.TrackerFormatString = ParName + " : {Y:0.00}%";
-                yAxis.LabelFormatter = (x) => x.ToString("0.00") + "%";
+                yAxis.LabelFormatter = (x) => x.ToString("0.0") + "%";
                 yAxis.Maximum = fsPointsMax + (fsPointsMax / (Div/20));
                 yAxis.Minimum = fsPointsMin - (fsPointsMax / (Div/20));
                 //yAxis.LabelFormatter = (x) => ((x - fsPointsMean) * 100 / fsPointsMean).ToString("0.00") + "%";
@@ -205,9 +208,9 @@ namespace MuonDetectorReader
                 Position = AxisPosition.Bottom,
                 StringFormat = "yyyy/MM/dd HH:mm",
                 AxisTitleDistance = 10,
-                IntervalLength = 30,
+                IntervalLength = MainWindow.SilentDataCorrection ? 20 : 30,
                 IntervalType = DateTimeIntervalType.Days,
-                MajorGridlineStyle = LineStyle.Dash,
+                MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.Dot,
                 Angle = -35
             };
@@ -233,7 +236,7 @@ namespace MuonDetectorReader
                     }
                 }
 
-                if (ax.ActualMaximum - ax.ActualMinimum <= 3)
+                if (ax.ActualMaximum - ax.ActualMinimum <= 1)
                 {
                     if (err_data1 != null && confarea == null && !MainWindow.HideData)
                         n.Annotations.Add(confidenceArea.Clone());
@@ -291,10 +294,10 @@ namespace MuonDetectorReader
                     double med = RangePoints.Average(d => d.Y);
 
                     RangePoints.Clear();
-
-                    p.Model.Axes[1].Maximum = max + (med / 1000);
-                    p.Model.Axes[1].Minimum = min - (med / 1000);
-
+                    var asd = Math.Truncate(med).ToString("0.").Length;
+                    p.Model.Axes[1].Maximum = max + (med / Math.Pow(10, asd) * 2);
+                    p.Model.Axes[1].Minimum = min - (med / Math.Pow(10, asd) * 2);
+                    //(MainWindow.SilentDataCorrection && ParName.Contains("Conteggi") ? 2 : 10 * asd)
                     p.InvalidatePlot();
 
                     resetButton.Visibility = Visibility.Visible;

@@ -1,25 +1,27 @@
 ﻿using Microsoft.Win32;
+using MuonDetectorReader.Utils;
 using OxyPlot;
-using LineSeries = OxyPlot.Series.LineSeries;
 using OxyPlot.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xml;
-using DateTimePicker = Xceed.Wpf.Toolkit.DateTimePicker;
-using static MuonDetectorReader.Graph;
-using System.Threading.Tasks;
-using MuonDetectorReader.Utils;
-using System.Windows.Documents;
-using FontWeights = System.Windows.FontWeights;
-using System.Diagnostics;
 using System.Windows.Navigation;
+using System.Xml;
+using Xceed.Wpf.AvalonDock.Controls;
+using static MuonDetectorReader.Graph;
+using DateTimePicker = Xceed.Wpf.Toolkit.DateTimePicker;
+using FontWeights = System.Windows.FontWeights;
+using LineSeries = OxyPlot.Series.LineSeries;
 
 namespace MuonDetectorReader
 { 
@@ -37,9 +39,11 @@ namespace MuonDetectorReader
         List<double> DeltaCorrCounts = new List<double>();
         List<double> DeltaFullCorrCounts = new List<double>();
 
+        private static readonly Regex charRegex = new Regex("[a-z]+");
+
         double Temp_avg;
-        const double kT = -0.001599129876488731; // Valido solo per EKAR, stimato dai dati 2024_09 - 2025_11
-        const double SigmakT = 2.7746839281697869E-09;
+        const double kT = -0.00170065228125; // Valido solo per EKAR, stimato dai dati 2024_09 - 2025_11
+        const double SigmakT = 1.3346453895E-18;
 
         public static string GraphTitle = "Grafico";
         public static string ActiveGraph = "";
@@ -48,6 +52,8 @@ namespace MuonDetectorReader
 
         public static string FileName;
         public static bool HideData;
+
+        public static bool SilentDataCorrection = false;
 
         public MainWindow()
         {
@@ -87,16 +93,69 @@ namespace MuonDetectorReader
             e.Handled = _regex.IsMatch(e.Text);
         }
 
+        public void DataProcessingForHFS(string HFSpath, string DetectorName)
+        {
+            SilentDataCorrection = true;
+
+            DateTime date = DateTime.Now;
+            string year = date.ToString("yyyy");
+            List<string> files = Directory.GetFiles(HFSpath, "CoolTerm Capture *" + year + "*.txt").ToList();
+            files.Reverse();
+
+            string outfilename = HFSpath + @"\merge\" + DetectorName + " " + year + ".txt";
+
+            if (files.Count > 0)
+            {
+                List<string> outLines = File.ReadAllLines(outfilename).ToList();
+
+                foreach (var file in files)
+                {
+                    List<string> inLines = File.ReadAllLines(file).Where(s => s != "").ToList();
+                    foreach (var line in inLines)
+                    {
+                        if (!outLines.Contains(line))
+                        {
+                            string str = line;
+                            if (charRegex.IsMatch(str))
+                                str = charRegex.Replace(str, "");
+
+                            outLines.Add(str);
+                        }           
+                    }
+                }
+
+                File.WriteAllLines(outfilename, outLines);
+            }
+
+            Open_Click(outfilename, null);
+            //AvgSlider.Value = 6;
+            DateTime dateFrom = Dates.Count > 336 ? date - new TimeSpan(14, 0, 0, 0) : Dates.Last();
+            HFSpath += @"\img\";
+            string[] graphs = { "counts.png", "pressure.png", "temp.png" };
+            int i = 0;
+            foreach ( string graph in graphs)
+            {
+                DateFrom_SelectedDateChanged(new DateTimePicker() { Value = dateFrom }, null);
+                DateTo_SelectedDateChanged(new DateTimePicker() { Value = Dates.First() }, null);
+                ExportGraph_Click(HFSpath + graph, null);
+                DateToOldSD = new DateTime();
+                Graph_Click(new Button() { Tag = i>0 ? "Temp" : "Press" }, null);
+                i++;
+            }
+        }
+
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            
-            string path;
+
+            string path = SilentDataCorrection ? (string)sender : null;
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "file txt o csv |*.txt;*.csv";
+            bool dialogResult = SilentDataCorrection ? true : openFileDialog.ShowDialog().Value;
 
-            if (openFileDialog.ShowDialog().Value)
+            if (dialogResult || SilentDataCorrection)
             {
-                path = openFileDialog.FileName;
+                if(!SilentDataCorrection)
+                    path = openFileDialog.FileName;
 
                 try
                 {
@@ -124,7 +183,8 @@ namespace MuonDetectorReader
                     }
                     else if (BetaBox.Text != "nessuno" && double.TryParse(PressBox.Text, out double refPress))
                     {
-                        DataLostCheck();
+                        if (!SilentDataCorrection)
+                            DataLostCheck();
 
                         PmP0.Clear();
                         Press.ForEach(point => PmP0.Add(point - refPress));
@@ -206,26 +266,47 @@ namespace MuonDetectorReader
         }
 
         private void ExportGraph_Click(object sender, RoutedEventArgs e)
-        {            
+        {
             try
-            {
+            { 
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 string date = DateTime.Now.ToString("dd'-'MM-yyyy' 'HH'h'mm'm'ss's'");
                 string folder;
-                path += "\\Moun Detector Reader - Grafici";
-                Directory.CreateDirectory(path);
-                folder = path;
-                path += "\\"+ GraphTitle + " - " + date + ".png";
+                int graphWidth = 1600, graphHeight = 900;
 
-                PngExporter pngExporter = new PngExporter { Width = 1600, Height = 900, Background = OxyColors.White };
+                if (!SilentDataCorrection)
+                {
+                    path += "\\Moun Detector Reader - Grafici";
+
+                    Directory.CreateDirectory(path);
+                    folder = path;
+                    path += "\\" + GraphTitle + " - " + date + ".png";
+                }
+                else
+                {
+                    path = (string)sender;
+                    folder = path.Replace(path.Split('\\').Last(),"");
+                    graphWidth = 800;
+                    graphHeight = 450;
+                    
+                    if (!Directory.Exists(folder))
+                        Directory.CreateDirectory(folder);
+                    (((MainGrid.Children[3] as Grid).Children[1] as StackPanel).Children[1] as Button).RaiseEvent(new RoutedEventArgs(ButtonBase.ClickEvent));
+                }
+
+                PngExporter pngExporter = new PngExporter { Width = graphWidth, Height = graphHeight, Background = OxyColors.White };
+
 
                 PlotModel pm = ((MainGrid.Children[3] as Grid).Children[0] as PlotView).Model;
 
                 pngExporter.ExportToFile(pm, path);
 
-                MessageBox.Show("Grafico esportato correttamente nella cartella \"Moun Detector Reader - Grafici\" sul Desktop.\n \n" + path, "Esporta Grafico");
 
-                System.Diagnostics.Process.Start(folder);
+                if (!SilentDataCorrection) { 
+                    MessageBox.Show("Grafico esportato correttamente nella cartella \"Moun Detector Reader - Grafici\" sul Desktop.\n \n" + path, "Esporta Grafico");
+
+                    Process.Start(folder);
+                }
             }
             catch (Exception ex)
             {
@@ -347,7 +428,7 @@ namespace MuonDetectorReader
                     else
                     {
                         GraphTitle = "Conteggi Corretti in Pressione e Temperatura";
-                        MainGrid.Children.Add(GraphData(Dates, FullCorrCounts, Color.FromArgb(200, 50, 110, 200), "Conteggi Corretti", SmoothValue.Text == "OFF" ? false : true, (uint)AvgSlider.Value, err_data1: DeltaFullCorrCounts, HorLine: false));
+                        MainGrid.Children.Add(GraphData(Dates, FullCorrCounts, Color.FromArgb(200, 50, 110, 200), "Conteggi Corretti", SmoothValue.Text == "OFF" ? false : true, (uint)AvgSlider.Value, err_data1: DeltaFullCorrCounts, HorLine: false, dot: true));
                     }
 
                     OutlierBox.IsEnabled = DatePickerPanel.IsEnabled = TempCorrBox.IsEnabled = AvgSlider.IsEnabled = true;
@@ -406,21 +487,21 @@ namespace MuonDetectorReader
                 if (DG_CG.IsChecked == true)
                 {
                     GraphTitle = DG_P.IsChecked == true ? "ContGrezzi_vs_Press" : "ContGrezzi_vs_Temp";
-                    MainGrid.Children.Add(GraphTwoData(Dates, RawCounts, DG_P.IsChecked == true ? Press : Temp, "Conteggi", DG_P.IsChecked == true ? "Pressione" : "Temperatura", Color.FromArgb(180, 0, 120, 0), DG_P.IsChecked == true ? Colors.Orange : Colors.DarkMagenta, data2Div: DG_T.IsChecked == true ? 5 : 50));                   
+                    MainGrid.Children.Add(GraphTwoData(Dates, RawCounts, DG_P.IsChecked == true ? Press : Temp, "Conteggi", DG_P.IsChecked == true ? "Pressione (mBar)" : "Temperatura (°C)", Color.FromArgb(180, 0, 120, 0), DG_P.IsChecked == true ? Colors.Orange : Colors.DarkMagenta, data2Div: DG_T.IsChecked == true ? 5 : 50));                   
                 }
                 else if (DG_CCP.IsChecked == true)
                 {
                     GraphTitle = DG_P.IsChecked == true ? "ContCorrettiPress_vs_Press" : "ContCorrettiPress_vs_Temp";
-                    MainGrid.Children.Add(GraphTwoData(Dates, CorrCounts, DG_P.IsChecked == true ? Press : Temp, "Conteggi Corretti", DG_P.IsChecked == true ? "Pressione" : "Temperatura", Color.FromArgb(120, 50, 110, 200), DG_P.IsChecked == true ? Colors.Orange : Colors.DarkMagenta, data2Div: DG_T.IsChecked == true ? 5 : 50));
+                    MainGrid.Children.Add(GraphTwoData(Dates, CorrCounts, DG_P.IsChecked == true ? Press : Temp, "Conteggi Corretti", DG_P.IsChecked == true ? "Pressione (mBar)" : "Temperatura (°C)", Color.FromArgb(120, 50, 110, 200), DG_P.IsChecked == true ? Colors.Orange : Colors.DarkMagenta, data2Div: DG_T.IsChecked == true ? 5 : 50));
                 }
                 else if (DG_CCPT.IsChecked == true)
                 {
                     GraphTitle = DG_P.IsChecked == true ? "ContCorrettiPressTemp_vs_Press" : "ContCorrettiPressTemp_vs_Temp";
-                    MainGrid.Children.Add(GraphTwoData(Dates, FullCorrCounts, DG_P.IsChecked == true ? Press : Temp, "Conteggi Corretti", DG_P.IsChecked == true ? "Pressione" : "Temperatura", Color.FromArgb(120, 50, 110, 200), DG_P.IsChecked == true ? Colors.Orange : Colors.DarkMagenta, data2Div: DG_T.IsChecked == true ? 5 : 50));
+                    MainGrid.Children.Add(GraphTwoData(Dates, FullCorrCounts, DG_P.IsChecked == true ? Press : Temp, "Conteggi Corretti", DG_P.IsChecked == true ? "Pressione (mBar)" : "Temperatura (°C)", Color.FromArgb(120, 50, 110, 200), DG_P.IsChecked == true ? Colors.Orange : Colors.DarkMagenta, data2Div: DG_T.IsChecked == true ? 5 : 50));
                 }
                 else
                 {
-                    GraphTitle = DG_P.IsChecked == true ? "Pressione" : "Temperatura";
+                    GraphTitle = DG_P.IsChecked == true ? "Pressione (mBar)" : "Temperatura (°C)";
                     MainGrid.Children.Add(GraphData(Dates, DG_P.IsChecked == true ? Press : Temp, DG_P.IsChecked == true ? Colors.Orange : Colors.DarkMagenta, GraphTitle, false, Div: DG_T.IsChecked == true ? 5 : 50));
                 }
 
@@ -532,7 +613,6 @@ namespace MuonDetectorReader
             }
         }
 
-        private static readonly Regex _regexFile = new Regex("[a-z]+");
         private void ParseTXT(string path)
         {
             StreamReader sr = new StreamReader(path);
@@ -545,10 +625,28 @@ namespace MuonDetectorReader
             CorrCounts.Clear();
             FullCorrCounts.Clear();
 
+            bool csv = path.Contains(".csv");
+
             do
             {
-                    str = sr.ReadLine();
-                if ((str.Contains(" * ") || str.Contains(",")) && (str.Contains("/") || str.Contains("-")) && !_regexFile.IsMatch(str))
+                str = sr.ReadLine();
+                if (csv)
+                {
+                    if (str.Contains(";"))
+                    {
+                        str = str.Replace(";", "*");
+                        str = str.Replace(",", ".");
+                    }
+                    else if (str.Contains(","))
+                        str = str.Replace(",", "*");
+                }
+                else
+                    str = str.Replace(",", ".");
+
+                if(charRegex.IsMatch(str))
+                    str = charRegex.Replace(str, "");
+
+                if (str.Contains("*") && (str.Contains("/") || str.Contains("-")) && !charRegex.IsMatch(str))
                 {
                     if (str.Contains("-"))
                         str = str.Replace("-", "/");
@@ -556,10 +654,7 @@ namespace MuonDetectorReader
                     if (str.Contains("   "))
                         str = str.Replace("   ", "");
 
-                    if (str.Contains(","))
-                        str = str.Replace(",", " * ");
-
-                    Dates.Add(Convert.ToDateTime(str.Remove(str.IndexOf("*")-1)));
+                    Dates.Add(Convert.ToDateTime(str.Remove(str.IndexOf("*") - 1)));
 
                     str = str.Remove(0, str.IndexOf("*") + 1);
                     Temp.Add(Convert.ToDouble(str.Remove(str.IndexOf("*")).Replace(".", ",")));
@@ -568,7 +663,7 @@ namespace MuonDetectorReader
                     Press.Add(Convert.ToDouble(str.Remove(str.IndexOf("*")).Replace(".", ",")));
 
                     str = str.Remove(0, str.IndexOf("*") + 1);
-                    if(str.Contains(".") || str.Contains(","))
+                    if (str.Contains(".") || str.Contains(","))
                         RawCounts.Add((int)Convert.ToDouble(str.Replace(".", ",")));
                     else
                         RawCounts.Add(Convert.ToInt32(str));
@@ -580,7 +675,7 @@ namespace MuonDetectorReader
 
             if (Dates.Count == 0 || Temp.Count == 0 || Press.Count == 0 || RawCounts.Count == 0)
                 throw new Exception("Formato errato");
-
+            
         }
 
 
@@ -916,7 +1011,7 @@ namespace MuonDetectorReader
             DateTo.ValueChanged -= DateTo_SelectedDateChanged;
 
             DateFrom.Value = DateFromOldSD = Dates.Last();
-            DateTo.Value = DateToOldSD = Dates.First();
+            DateTo.Value = /*DateToOldSD =*/ Dates.First();
 
             DateFrom.ValueChanged += DateFrom_SelectedDateChanged;
             DateTo.ValueChanged += DateTo_SelectedDateChanged;

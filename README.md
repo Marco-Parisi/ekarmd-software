@@ -27,8 +27,9 @@ The processed data is displayed as interactive graphs, which can be saved as **P
   <p align="center">
     <font size=2><i>Main page</i></font>
   </p>
+  
   <p align="center">
-    <img src="https://github.com/user-attachments/assets/2259add3-cd8c-4018-a6bd-9f1fa29cec78" width="700"/>
+    <img src="https://github.com/user-attachments/assets/4f6f81de-1c3f-488d-a33e-523910a5ba1f" width="700"/>
   </p>
 </div>
 

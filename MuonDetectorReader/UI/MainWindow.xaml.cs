@@ -428,7 +428,7 @@ namespace MuonDetectorReader
                     else
                     {
                         GraphTitle = "Conteggi Corretti in Pressione e Temperatura";
-                        MainGrid.Children.Add(GraphData(Dates, FullCorrCounts, Color.FromArgb(200, 50, 110, 200), "Conteggi Corretti", SmoothValue.Text == "OFF" ? false : true, (uint)AvgSlider.Value, err_data1: DeltaFullCorrCounts, HorLine: false, dot: true));
+                        MainGrid.Children.Add(GraphData(Dates, FullCorrCounts, Color.FromArgb(200, 50, 110, 200), "Conteggi Corretti", SmoothValue.Text == "OFF" ? false : true, (uint)AvgSlider.Value, err_data1: DeltaFullCorrCounts, HorLine: false, dot: SilentDataCorrection? true : false));
                     }
 
                     OutlierBox.IsEnabled = DatePickerPanel.IsEnabled = TempCorrBox.IsEnabled = AvgSlider.IsEnabled = true;

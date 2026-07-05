@@ -102,27 +102,49 @@ namespace MuonDetectorReader
             List<string> files = Directory.GetFiles(HFSpath, "CoolTerm Capture *" + year + "*.txt").ToList();
             files.Reverse();
 
-            string outfilename = HFSpath + @"\merge\" + DetectorName + " " + year + ".txt";
-
+            string outfilename = Path.Combine(HFSpath, "merge", $"{DetectorName} {year}.txt");
+            
             if (files.Count > 0)
             {
-                List<string> outLines = File.ReadAllLines(outfilename).ToList();
+                List<string> outLines = new List<string>();
+                HashSet<string> knownLines = new HashSet<string>();
+
+                if (File.Exists(outfilename))
+                {
+                    outLines = File.ReadAllLines(outfilename).ToList();
+                    knownLines = new HashSet<string>(outLines);
+                }
 
                 foreach (var file in files)
                 {
-                    List<string> inLines = File.ReadAllLines(file).Where(s => s != "").ToList();
-                    foreach (var line in inLines)
+                    foreach (var line in File.ReadLines(file))
                     {
-                        if (!outLines.Contains(line))
-                        {
-                            string str = line;
-                            if (charRegex.IsMatch(str))
-                                str = charRegex.Replace(str, "");
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
 
-                            outLines.Add(str);
-                        }           
+                        // pulizia della stringa da caratteri non numerici
+                        string cleanedLine = charRegex.Replace(line, "");
+
+                        // controllo sull'HashSet
+                        if (!knownLines.Contains(cleanedLine))
+                        {
+                            outLines.Add(cleanedLine);
+                            knownLines.Add(cleanedLine);
+                        }
                     }
                 }
+
+                // 1. separazione righe che non iniziano con un numero (l[4] perché la riga inizia con 3 spazi)
+                List<string> headers = outLines.Where(l => l.Length > 0 && !char.IsDigit(l[4])).ToList();
+
+                // 2. separazione righe che iniziano con l'anno
+                List<string> dataRows = outLines.Where(l => l.Length > 0 && char.IsDigit(l[4])).ToList();
+
+                // 3. ordinamento alfabetico
+                dataRows.Sort();
+
+                // 4. concatenamento intestazioni e dati ordinati
+                outLines = headers.Concat(dataRows).ToList();
 
                 File.WriteAllLines(outfilename, outLines);
             }
@@ -131,7 +153,7 @@ namespace MuonDetectorReader
             //AvgSlider.Value = 6;
             DateTime dateFrom = Dates.Count > 336 ? date - new TimeSpan(14, 0, 0, 0) : Dates.Last();
             HFSpath += @"\img\";
-            string[] graphs = { "counts.png", "pressure.png", "temp.png" };
+            string[] graphs = { "counts.png", "pressure.png", "temp.png", "rawcount_pressure.png" };
             int i = 0;
             foreach ( string graph in graphs)
             {
@@ -139,7 +161,13 @@ namespace MuonDetectorReader
                 DateTo_SelectedDateChanged(new DateTimePicker() { Value = Dates.First() }, null);
                 ExportGraph_Click(HFSpath + graph, null);
                 DateToOldSD = new DateTime();
-                Graph_Click(new Button() { Tag = i>0 ? "Temp" : "Press" }, null);
+                if( i < 2 )
+                    Graph_Click(new Button() { Tag = i>0 ? "Temp" : "Press" }, null);
+                else
+                {
+                    DG_CG.IsChecked = DG_P.IsChecked = true;
+                    DoubleGraphOK_Click(null, null);
+                }
                 i++;
             }
         }
@@ -298,7 +326,6 @@ namespace MuonDetectorReader
 
 
                 PlotModel pm = ((MainGrid.Children[3] as Grid).Children[0] as PlotView).Model;
-
                 pngExporter.ExportToFile(pm, path);
 
 
@@ -1036,8 +1063,14 @@ namespace MuonDetectorReader
 
                 pv.Model.DefaultXAxis.Minimum = OxyPlot.Axes.DateTimeAxis.ToDouble(SD);
                 pv.ResetAllAxes();
-                (((pv.Parent as Grid).Children[1] as StackPanel).Children[0] as Button).Visibility = Visibility.Collapsed;
-                (((pv.Parent as Grid).Children[1] as StackPanel).Children[1] as Button).Visibility = Visibility.Visible;
+
+                int i = 0;
+                foreach (Button butt in ((pv.Parent as Grid).Children[1] as StackPanel).Children)
+                {
+                    butt.Visibility = i > 0 ? Visibility.Visible : Visibility.Collapsed;
+                    i++;
+                }
+
                 pv.InvalidatePlot(true);
 
                 DateFromOldSD = SD;
@@ -1068,8 +1101,14 @@ namespace MuonDetectorReader
 
                     pv.Model.DefaultXAxis.Maximum = OxyPlot.Axes.DateTimeAxis.ToDouble(SD);
                     pv.ResetAllAxes();
-                    (((pv.Parent as Grid).Children[1] as StackPanel).Children[0] as Button).Visibility = Visibility.Collapsed;
-                    (((pv.Parent as Grid).Children[1] as StackPanel).Children[1] as Button).Visibility = Visibility.Visible;
+
+                    int i = 0;
+                    foreach (Button butt in ((pv.Parent as Grid).Children[1] as StackPanel).Children)
+                    {
+                        butt.Visibility = i > 0 ? Visibility.Visible : Visibility.Collapsed;
+                        i++;
+                    }    
+
                     pv.InvalidatePlot(true);
 
                     DateToOldSD = SD;

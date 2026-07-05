@@ -294,10 +294,9 @@ namespace MuonDetectorReader
                     double med = RangePoints.Average(d => d.Y);
 
                     RangePoints.Clear();
-                    var asd = Math.Truncate(med).ToString("0.").Length;
-                    p.Model.Axes[1].Maximum = max + (med / Math.Pow(10, asd) * 2);
-                    p.Model.Axes[1].Minimum = min - (med / Math.Pow(10, asd) * 2);
-                    //(MainWindow.SilentDataCorrection && ParName.Contains("Conteggi") ? 2 : 10 * asd)
+                    int digit = Math.Truncate(med).ToString("0.").Length;
+                    p.Model.Axes[1].Maximum = max + (med / Math.Pow(10, digit) * 2);
+                    p.Model.Axes[1].Minimum = min - (med / Math.Pow(10, digit) * 2);
                     p.InvalidatePlot();
 
                     resetButton.Visibility = Visibility.Visible;
@@ -394,16 +393,25 @@ namespace MuonDetectorReader
             Button resetButton = new Button()
             {
                 Visibility = Visibility.Collapsed,
-                Content = "Reset Zoom",
-                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
-                VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                Content = "Reset Grafico",
                 Height = 30,
                 Width = 100,
                 FontWeight = System.Windows.FontWeights.Bold,
-                Margin = new Thickness(90, 10, 10, 5),
                 Background = oxC,
                 Foreground = new SolidColorBrush(Colors.White)
             };
+
+
+            StackPanel buttonsPanel = new StackPanel()
+            {
+                Margin = new Thickness(90, 10, 10, 5),
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Left,
+                VerticalAlignment = System.Windows.VerticalAlignment.Top,
+                Orientation = Orientation.Horizontal
+
+            };
+
+            buttonsPanel.Children.Add(resetButton);
 
             PlotView chart1 = new PlotView()
             {
@@ -416,9 +424,17 @@ namespace MuonDetectorReader
             {
                 PlotType = PlotType.XY,
                 PlotMargins = new OxyThickness(double.NaN, 0, double.NaN, double.NaN),
-                Title = MainWindow.GraphTitle,
+                Title = MainWindow.SilentDataCorrection ? "Conteggi Grezzi e Pressione {Δt = 14 giorni}" : MainWindow.GraphTitle,
                 TitleFontSize = 14,
-                Subtitle = "File: "+MainWindow.FileName + " | Dati: "  + Dates.Count.ToString(),
+                Subtitle = MainWindow.SilentDataCorrection ? "" : "File: " + MainWindow.FileName + " | Dati: " + Dates.Count.ToString(),
+                LegendTitle = "",
+                LegendPosition = LegendPosition.RightTop,
+                LegendBackground = OxyColor.FromArgb(170, 180, 180, 180),
+                LegendTitleColor = OxyColors.Black,
+                LegendTitleFontSize = 12,
+                LegendTitleFont = "Arial",
+                LegendMaxHeight = 80,
+                LegendMaxWidth = 170,
             };
 
             LinearAxis yAxis = new LinearAxis()
@@ -427,7 +443,7 @@ namespace MuonDetectorReader
                 Title = dataTitle1,
                 AxisTitleDistance = 20,
                 IntervalLength = 20,
-                MajorGridlineStyle = LineStyle.Dash,
+                MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.Dot,
             };
 
@@ -438,8 +454,8 @@ namespace MuonDetectorReader
                 Title = dataTitle2,
                 AxisTitleDistance = 20,
                 IntervalLength = 20,
-                MajorGridlineStyle = LineStyle.Dash,
-                MinorGridlineStyle = LineStyle.Dot,
+                MajorGridlineStyle = LineStyle.None,
+                MinorGridlineStyle = LineStyle.None,
             };
 
             DateTimeAxis xAxis = new DateTimeAxis
@@ -447,11 +463,11 @@ namespace MuonDetectorReader
                 Position = AxisPosition.Bottom,
                 StringFormat = "yyyy/MM/dd HH:mm",
                 AxisTitleDistance = 10,
-                IntervalLength = 30,
+                IntervalLength = MainWindow.SilentDataCorrection ? 20 : 30,
                 MinimumMajorStep = 0.001,
                 MinorIntervalType = DateTimeIntervalType.Days,
                 IntervalType = DateTimeIntervalType.Days,
-                MajorGridlineStyle = LineStyle.Solid,
+                MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.None,
                 Angle = -35
             };
@@ -459,6 +475,7 @@ namespace MuonDetectorReader
             LineSeries fs = new LineSeries()
             {
                 CanTrackerInterpolatePoints = false,
+                Title = dataTitle1 + (MainWindow.SilentDataCorrection ? " Grezzi" : ""),
                 Color = OxyColor.FromArgb(oxC.Color.A, oxC.Color.R, oxC.Color.G, oxC.Color.B),
                 LineStyle = LineStyle.Solid,
                 MarkerType = MarkerType.None,
@@ -470,6 +487,7 @@ namespace MuonDetectorReader
             LineSeries fs2 = new LineSeries()
             {
                 CanTrackerInterpolatePoints = false,
+                Title = dataTitle2.Split('(')[0],
                 Color = OxyColor.FromArgb(oxC2.Color.A, oxC2.Color.R, oxC2.Color.G, oxC2.Color.B),
                 LineStyle = LineStyle.Solid,
                 MarkerType = MarkerType.None,
@@ -512,10 +530,10 @@ namespace MuonDetectorReader
                 if (s != null)
                 {
                     Button b = (s as Button);
-                    PlotView p = ((b.Parent as Grid).Children[0] as PlotView);
+                    PlotView pv = grid.Children[0] as PlotView;
                     if (b.Visibility == Visibility.Visible)
                     {
-                        p.ResetAllAxes();
+                        pv.ResetAllAxes();
                         b.Visibility = Visibility.Collapsed;
                     }
                 }
@@ -523,16 +541,67 @@ namespace MuonDetectorReader
 
             xAxis.MajorGridlineColor = xAxis.TicklineColor = yAxis.TicklineColor = yAxis.MajorGridlineColor = OxyColors.Gray;
 
+            yAxis.Minimum = fs.Points.Min(p => p.Y) - (fs.Points.Min(p => p.Y) / data1Div);
+            yAxis.Maximum = fs.Points.Max(p => p.Y) + (fs.Points.Max(p => p.Y) / data1Div);
+            yAxis2.Minimum = fs2.Points.Min(p => p.Y) - (fs2.Points.Min(p => p.Y) / data2Div);
+            yAxis2.Maximum = fs2.Points.Max(p => p.Y) + (fs2.Points.Max(p => p.Y) / data2Div);
 
-            double yAxisMin = yAxis.Minimum = fs.Points.Min(p => p.Y) - (fs.Points.Min(p => p.Y) / data1Div);
-            double yAxisMax = yAxis.Maximum = fs.Points.Max(p => p.Y) + (fs.Points.Max(p => p.Y) / data1Div);
-            double yAxis2Min = yAxis2.Minimum = fs2.Points.Min(p => p.Y) - (fs2.Points.Min(p => p.Y) / data2Div);
-            double yAxis2Max = yAxis2.Maximum = fs2.Points.Max(p => p.Y) + (fs2.Points.Max(p => p.Y) / data2Div);
-
+            
             n.Axes.Add(xAxis);
             n.Axes.Add(yAxis);
             n.Axes.Add(yAxis2);
 
+            if (MainWindow.SilentDataCorrection) {
+
+                Button stretchButton = new Button()
+                {
+                    Content = "Stretch Grafico",
+                    Height = 30,
+                    Width = 100,
+                    FontWeight = System.Windows.FontWeights.Bold,
+                    Background = oxC,
+                    Foreground = new SolidColorBrush(Colors.White)
+                };
+
+                stretchButton.Click += (s, e) =>
+                {
+                    if (s != null)
+                    {
+                        PlotView p = grid.Children[0] as PlotView;
+
+                        double YAxisActualMin = p.Model.Axes[0].ActualMinimum;
+                        double YAxisActualMax = p.Model.Axes[0].ActualMaximum;
+
+                        int n_ax = 1;
+                        foreach (LineSeries tempFS in p.Model.Series)
+                        {
+                            List<DataPoint> RangePoints = tempFS.Points.FindAll((d) => d.X >= YAxisActualMin && d.X <= YAxisActualMax);
+
+
+                            double max = RangePoints.Max(d => d.Y);
+                            double min = RangePoints.Min(d => d.Y);
+                            double med = RangePoints.Average(d => d.Y);
+
+                            RangePoints.Clear();
+                            int digit = Math.Truncate(med).ToString("0.").Length;
+                            p.Model.Axes[n_ax].Maximum = max + (med / Math.Pow(10, digit - (n_ax > 1 ? 0 : 2)) * 2);
+                            p.Model.Axes[n_ax].Minimum = min - (med / Math.Pow(10, digit - (n_ax > 1 ? 0 : 2)) * 2);
+                            n_ax++;
+                        }
+
+                        p.InvalidatePlot();
+
+                        resetButton.Visibility = Visibility.Visible;
+                        stretchButton.Visibility = Visibility.Collapsed;
+                    }
+                };
+
+                buttonsPanel.Children.Add(stretchButton);
+
+                var points = Smoothed(fs.Points, 6).Points;
+                fs.Points.Clear();
+                fs.Points.AddRange(points);
+            }
             n.Series.Add(fs);
             n.Series.Add(fs2);
             
@@ -545,7 +614,7 @@ namespace MuonDetectorReader
             chart1.ActualController.BindMouseDown(OxyMouseButton.Left, PlotCommands.PanAt);
             
             grid.Children.Add(chart1);
-            grid.Children.Add(resetButton);
+            grid.Children.Add(buttonsPanel);
 
             return grid;
         }
@@ -1252,13 +1321,16 @@ namespace MuonDetectorReader
             return fsFit;
         }
 
-        public static PolylineAnnotation Smoothed(List<DataPoint> DP, uint Window = 4, List<double>DeltaDP = null)
+        public static PolylineAnnotation Smoothed(List<DataPoint> DP, uint Window = 4, OxyColor? lineColor = null, List<double>DeltaDP = null)
         {
+            if (lineColor == null)
+                lineColor = OxyColor.FromArgb(200, 255, 40, 40);
+
             PolylineAnnotation weightedAverageSeries = new PolylineAnnotation()
             {
                 //CanTrackerInterpolatePoints = false,
                 LineJoin = LineJoin.Round,
-                Color = OxyColor.FromArgb(200, 255, 40, 40),
+                Color = lineColor.Value,
                 LineStyle = LineStyle.Solid,
                 StrokeThickness = 3,
                 //InterpolationAlgorithm = InterpolationAlgorithms.UniformCatmullRomSpline,              

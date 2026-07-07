@@ -19,10 +19,14 @@ namespace MuonDetectorReader
      
             base.OnStartup(e);
 
-            if (e.Args.Length == 2)
+            if (e.Args.Length >= 2)
             {
                 string path = e.Args[0];
                 string detName = e.Args[1];
+                int days = 14;
+
+                if(e.Args.Length == 3)
+                   int.TryParse(e.Args[2], out days);
 
                 AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
                 {
@@ -30,7 +34,7 @@ namespace MuonDetectorReader
                 };
 
                 MainWindow tempMW = new MainWindow();
-                tempMW.DataProcessingForHFS(path, detName);
+                tempMW.DataProcessingForHFS(path, detName, days);
 
                 Shutdown();
             }

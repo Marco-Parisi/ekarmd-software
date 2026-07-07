@@ -166,7 +166,7 @@ namespace MuonDetectorReader
                 LegendMaxHeight = 80,
                 LegendMaxWidth = 170,
                 LegendPosition = LegendPosition.TopRight,
-                Title = MainWindow.SilentDataCorrection ? ParName.Split('(')[0] + " {Δt = 14 giorni}" : MainWindow.GraphTitle,
+                Title = MainWindow.SilentDataCorrection ? ParName.Split('(')[0] + " {Δt = " + MainWindow.SilentDataCorrDays + " giorni}" : MainWindow.GraphTitle,
                 TitleFontSize = 14,
                 Subtitle = MainWindow.SilentDataCorrection ? "" : "File: " + MainWindow.FileName + " | Dati: " + Dates.Count.ToString(),
             };
@@ -206,9 +206,9 @@ namespace MuonDetectorReader
             DateTimeAxis xAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
-                StringFormat = "yyyy/MM/dd HH:mm",
+                StringFormat = MainWindow.SilentDataCorrection ? "yyyy/MM/dd" : "yyyy/MM/dd HH:mm",
                 AxisTitleDistance = 10,
-                IntervalLength = MainWindow.SilentDataCorrection ? 20 : 30,
+                IntervalLength = 50 - int.Parse(MainWindow.SilentDataCorrDays),
                 IntervalType = DateTimeIntervalType.Days,
                 MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.Dot,
@@ -424,7 +424,7 @@ namespace MuonDetectorReader
             {
                 PlotType = PlotType.XY,
                 PlotMargins = new OxyThickness(double.NaN, 0, double.NaN, double.NaN),
-                Title = MainWindow.SilentDataCorrection ? "Conteggi Grezzi e Pressione {Δt = 14 giorni}" : MainWindow.GraphTitle,
+                Title = MainWindow.SilentDataCorrection ? "Conteggi Grezzi e Pressione {Δt = " + MainWindow.SilentDataCorrDays + " giorni}" : MainWindow.GraphTitle,
                 TitleFontSize = 14,
                 Subtitle = MainWindow.SilentDataCorrection ? "" : "File: " + MainWindow.FileName + " | Dati: " + Dates.Count.ToString(),
                 LegendTitle = "",
@@ -461,9 +461,9 @@ namespace MuonDetectorReader
             DateTimeAxis xAxis = new DateTimeAxis
             {
                 Position = AxisPosition.Bottom,
-                StringFormat = "yyyy/MM/dd HH:mm",
+                StringFormat = MainWindow.SilentDataCorrection ? "yyyy/MM/dd" : "yyyy/MM/dd HH:mm",
                 AxisTitleDistance = 10,
-                IntervalLength = MainWindow.SilentDataCorrection ? 20 : 30,
+                IntervalLength = 50 - int.Parse(MainWindow.SilentDataCorrDays),
                 MinimumMajorStep = 0.001,
                 MinorIntervalType = DateTimeIntervalType.Days,
                 IntervalType = DateTimeIntervalType.Days,

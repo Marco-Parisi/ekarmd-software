@@ -54,7 +54,7 @@ namespace MuonDetectorReader
         public static bool HideData;
 
         public static bool SilentDataCorrection = false;
-
+        public static string SilentDataCorrDays;
         public MainWindow()
         {
             InitializeComponent();
@@ -93,9 +93,10 @@ namespace MuonDetectorReader
             e.Handled = _regex.IsMatch(e.Text);
         }
 
-        public void DataProcessingForHFS(string HFSpath, string DetectorName)
+        public void DataProcessingForHFS(string HFSpath, string DetectorName, int days)
         {
             SilentDataCorrection = true;
+            SilentDataCorrDays = days.ToString();
 
             DateTime date = DateTime.Now;
             string year = date.ToString("yyyy");
@@ -151,7 +152,7 @@ namespace MuonDetectorReader
 
             Open_Click(outfilename, null);
             //AvgSlider.Value = 6;
-            DateTime dateFrom = Dates.Count > 336 ? date - new TimeSpan(14, 0, 0, 0) : Dates.Last();
+            DateTime dateFrom = Dates.Count > 336 ? date - new TimeSpan(days, 0, 0, 0) : Dates.Last();
             HFSpath += @"\img\";
             string[] graphs = { "counts.png", "pressure.png", "temp.png", "rawcount_pressure.png" };
             int i = 0;
@@ -314,8 +315,8 @@ namespace MuonDetectorReader
                 {
                     path = (string)sender;
                     folder = path.Replace(path.Split('\\').Last(),"");
-                    graphWidth = 800;
-                    graphHeight = 450;
+                    graphWidth = 900;
+                    graphHeight = 500;
                     
                     if (!Directory.Exists(folder))
                         Directory.CreateDirectory(folder);

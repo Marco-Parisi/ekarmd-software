@@ -1,23 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+using System;
 using System.IO;
-using System.Linq;
 using System.Windows;
+using ControlzEx.Theming;
+using MuonDetectorReader.Services;
+using MuonDetectorReader.ViewModels;
 
 namespace MuonDetectorReader
 {
-    /// <summary>
-    /// Logica di interazione per App.xaml
-    /// </summary>
     public partial class App : Application
     {
-
         protected override void OnStartup(StartupEventArgs e)
         {
-     
             base.OnStartup(e);
+
+            var settingsService = new SettingsService();
+            var settings = settingsService.Load();
+            if (!string.IsNullOrEmpty(settings.Theme))
+            {
+                ThemeManager.Current.ChangeThemeBaseColor(this, settings.Theme);
+            }
+            LocalizationService.Current.Initialize();
 
             if (e.Args.Length >= 2)
             {
@@ -25,16 +27,17 @@ namespace MuonDetectorReader
                 string detName = e.Args[1];
                 int days = 14;
 
-                if(e.Args.Length == 3)
-                   int.TryParse(e.Args[2], out days);
+                if (e.Args.Length == 3)
+                    int.TryParse(e.Args[2], out days);
 
                 AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
                 {
-                    File.WriteAllText(path + @"\crash_log.txt", args.ExceptionObject.ToString());
+                    File.WriteAllText(Path.Combine(path, "crash_log.txt"), args.ExceptionObject.ToString());
                 };
 
-                MainWindow tempMW = new MainWindow();
-                tempMW.DataProcessingForHFS(path, detName, days);
+                // Use ViewModel directly without creating a Window
+                var viewModel = new MainViewModel();
+                viewModel.DataProcessingForCLI(path, detName, days);
 
                 Shutdown();
             }

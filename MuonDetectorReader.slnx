@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="MuonDetectorReader\MuonDetectorReader.csproj" Id="97e0928e-7ab3-47b4-9bc2-49ee88c3d40c">
+    <Platform Solution="*|x86" Project="x86" />
+  </Project>
+</Solution>

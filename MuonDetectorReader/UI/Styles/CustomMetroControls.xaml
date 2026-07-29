@@ -1,0 +1,153 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
+
+    <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+    <!-- Resource values -->
+    <GridLength x:Key="MenuWidth">220</GridLength>
+    <sys:Double x:Key="DoubleMenuHeight">100</sys:Double>
+    <CornerRadius x:Key="GlobalCornerRadius">0</CornerRadius>
+
+    <!-- Brush resources -->
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="{DynamicResource MahApps.Colors.Accent}" />
+    <SolidColorBrush x:Key="ButtonBackgroundSelectedBrush" Color="{DynamicResource MahApps.Colors.Accent2}" />
+    <SolidColorBrush x:Key="BorderBrush" Color="{DynamicResource MahApps.Colors.ControlBorder}" />
+    <SolidColorBrush x:Key="ButtonForegroundBrush" Color="{DynamicResource MahApps.Colors.IdealForeground}" />
+
+    <!-- Color resources for the graph buttons -->
+    <SolidColorBrush x:Key="SidebarGraphRawBrush" Color="#EF408040" />
+    <SolidColorBrush x:Key="SidebarGraphCorrectedBrush" Color="#D0207ED8" />
+    <SolidColorBrush x:Key="SidebarGraphPressureBrush" Color="#DF9010" />
+    <SolidColorBrush x:Key="SidebarGraphTemperatureBrush" Color="#9F50D8" />
+    <SolidColorBrush x:Key="SidebarBetaBrush" Color="#FFA00000" />
+    <SolidColorBrush x:Key="SidebarDoubleGraphBrush" Color="#FF0078D7" />
+
+    <Style TargetType="{x:Type mah:WindowCommands}">
+        <Style.Resources>
+            <ResourceDictionary>
+                <Style BasedOn="{StaticResource MahApps.Styles.Button.WindowCommands}" TargetType="{x:Type Button}">
+                    <Setter Property="Opacity" Value="0.7" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value="1" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ResourceDictionary>
+        </Style.Resources>
+    </Style>
+
+    <!-- Custom GroupBox style -->
+    <Style x:Key="MetroSidebarGroupBox" TargetType="GroupBox" BasedOn="{StaticResource MahApps.Styles.GroupBox}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="Margin" Value="0,4,0,4" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GroupBox">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <ContentPresenter Grid.Row="0" 
+                                          ContentSource="Header" 
+                                          Margin="4,4,4,0" 
+                                          TextElement.Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                                          TextElement.FontWeight="SemiBold"
+                                          TextElement.FontSize="14"/>
+                        <Rectangle Grid.Row="1" Height="1" Margin="4,2,4,4" Fill="{DynamicResource MahApps.Brushes.Accent4}" />
+                        <ContentPresenter Grid.Row="2" Margin="{TemplateBinding Padding}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <!-- Button style -->
+    <Style TargetType="Button" BasedOn="{StaticResource MahApps.Styles.Button}">
+        <Setter Property="MinHeight" Value="26" />
+        <Setter Property="Padding" Value="10 5 10 5" />
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource MahApps.Brushes.Gray7}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}" xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro">
+                    <Border x:Name="Border"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{StaticResource GlobalCornerRadius}"
+                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <Controls:ContentControlEx x:Name="PART_ContentPresenter"
+                                                   Padding="4"
+                                                   HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                   VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                   Content="{TemplateBinding Content}"
+                                                   ContentCharacterCasing="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ControlsHelper.ContentCharacterCasing)}"
+                                                   ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                                   ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                   ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                                                   RecognizesAccessKey="True"
+                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource MahApps.Brushes.AccentBase}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource FlatButtonPressedBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource FlatButtonPressedForegroundBrush}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <!-- ToggleButton style -->
+    <!-- Note: MahApps.Styles.Button.Square is typically for Buttons, using ToggleButton to avoid type mismatch crashes -->
+    <Style x:Key="MetroYAxisToggle" TargetType="ToggleButton" BasedOn="{StaticResource MahApps.Styles.ToggleButton}">
+        <Setter Property="Width" Value="28" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="mah:ControlsHelper.CornerRadius" Value="{StaticResource GlobalCornerRadius}" />
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.AccentBase}" />
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.Accent2}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="mah:ToggleSwitch" BasedOn="{StaticResource MahApps.Styles.ToggleSwitch}">
+        <Setter Property="OnContent" Value=""/>
+        <Setter Property="OffContent" Value=""/>
+        <Setter Property="MinWidth" Value="0"/>
+        <Setter Property="Width" Value="45"/>
+        <Style.Triggers>
+            <Trigger Property="IsOn" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MahApps.Brushes.AccentBase}" />
+                <Setter Property="Foreground" Value="{DynamicResource MahApps.Brushes.IdealForeground}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

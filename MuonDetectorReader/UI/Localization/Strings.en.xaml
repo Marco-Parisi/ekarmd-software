@@ -1,0 +1,144 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Title bar & Commands -->
+    <system:String x:Key="Str_HelpTooltip">Show/Hide Guide</system:String>
+    <system:String x:Key="Str_ThemeTooltip">Change Theme</system:String>
+    <system:String x:Key="Str_LanguageTooltip">Change Language (Italian / English)</system:String>
+
+    <!-- Flyouts & Axis Selector -->
+    <system:String x:Key="Str_OtherGraph">Dual Graph</system:String>
+    <system:String x:Key="Str_LeftYAxis">Left Y-Axis</system:String>
+    <system:String x:Key="Str_RightYAxis">Right Y-Axis</system:String>
+    <system:String x:Key="Str_RawCountsShort">Raw Counts</system:String>
+    <system:String x:Key="Str_PressCorrShort">Press. Corr. Counts</system:String>
+    <system:String x:Key="Str_PressTempCorrShort">Press. &amp; Temp. Corr. Counts</system:String>
+    <system:String x:Key="Str_PressureShort">Pressure</system:String>
+    <system:String x:Key="Str_TemperatureShort">Temperature</system:String>
+
+    <!-- Sidebar Section Headers & Controls -->
+    <system:String x:Key="Str_FileHeader">📂  File</system:String>
+    <system:String x:Key="Str_OpenFile">Open File</system:String>
+    <system:String x:Key="Str_DataCorrectionHeader">🔧  Data Correction</system:String>
+    <system:String x:Key="Str_RemoveOutliers">Outliers Removal</system:String>
+    <system:String x:Key="Str_OutlierSigma">Outlier Sigma:</system:String>
+    <system:String x:Key="Str_BarometricCoeff">Barometric Coefficient</system:String>
+    <system:String x:Key="Str_EstimateBeta">Est. Beta</system:String>
+    <system:String x:Key="Str_SavedBeta">Saved β value:  </system:String>
+    <system:String x:Key="Str_GraphsHeader">📊  Charts</system:String>
+    <system:String x:Key="Str_RawCounts">Raw Counts</system:String>
+    <system:String x:Key="Str_CorrectedCounts">Corr. Counts</system:String>
+    <system:String x:Key="Str_Pressure">Pressure</system:String>
+    <system:String x:Key="Str_Temperature">Temperature</system:String>
+    <system:String x:Key="Str_OtherGraphBtn">Dual Graph...</system:String>
+    <system:String x:Key="Str_OptionsHeader">⚙  Options</system:String>
+    <system:String x:Key="Str_MovingAverage">Moving Average:</system:String>
+    <system:String x:Key="Str_TempCorrection">Temperature Correction</system:String>
+    <system:String x:Key="Str_EkarOnlyTooltip">Valid only for the EKAR detector</system:String>
+    <system:String x:Key="Str_DataMask">Data Mask</system:String>
+    <system:String x:Key="Str_ExportHeader">💾  Export</system:String>
+    <system:String x:Key="Str_ExportFile">Export Data File</system:String>
+
+    <!-- Chart Toolbar -->
+    <system:String x:Key="Str_ChartMode">Chart Mode</system:String>
+    <system:String x:Key="Str_ChartMode_Points">Dotted</system:String>
+    <system:String x:Key="Str_ChartMode_Line">Line</system:String>
+    <system:String x:Key="Str_DateSelection">Date Selection</system:String>
+    <system:String x:Key="Str_From">From:</system:String>
+    <system:String x:Key="Str_To">To:</system:String>
+    <system:String x:Key="Str_YAxis">Y-Axis</system:String>
+    <system:String x:Key="Str_PercentTooltip">Percentage relative to mean</system:String>
+    <system:String x:Key="Str_SigmaTooltip">Standard deviations from mean</system:String>
+    <system:String x:Key="Str_AbsoluteTooltip">Raw counts value</system:String>
+    <system:String x:Key="Str_GraphCommands">Chart Commands</system:String>
+    <system:String x:Key="Str_Reset">Reset</system:String>
+    <system:String x:Key="Str_Stretch">Stretch</system:String>
+    <system:String x:Key="Str_Export">Export</system:String>
+
+    <!-- Welcome / Help Screen -->
+    <system:String x:Key="Str_Help_ClickOn">Click on</system:String>
+    <system:String x:Key="Str_Help_ToReadData">to start.</system:String>
+    <system:String x:Key="Str_Help_BetaNote">Use a file with at least 2 months of data to estimate Beta β (the value remains saved)</system:String>
+    <system:String x:Key="Str_Help_DataFormat">DATA FORMAT</system:String>
+    <system:String x:Key="Str_Help_FormatInfo">Text file (.txt or .csv) with 4 columns separated by * or comma:</system:String>
+    <system:String x:Key="Str_Help_DateAndTime">Date and Time</system:String>
+    <system:String x:Key="Str_Help_Temp">Temperature</system:String>
+    <system:String x:Key="Str_Help_Pressure">Pressure</system:String>
+    <system:String x:Key="Str_Help_Counts">Counts</system:String>
+    <system:String x:Key="Str_Help_GuideTitle">OPTIONS</system:String>
+    <system:String x:Key="Str_Help_OutliersDesc">→ Replaces data outside the range</system:String>
+    <system:String x:Key="Str_Help_MeanPlusMinus">Mean ± Nσ</system:String>
+    <system:String x:Key="Str_Help_WithAdjacent">with the average value.</system:String>
+    <system:String x:Key="Str_Help_TempCorrDesc">→ Corrects data for temperature for detector</system:String>
+    <system:String x:Key="Str_Help_EkarBold">EKAR.</system:String>
+    <system:String x:Key="Str_Help_MovingAvgDesc">→ Plots a line interpolating</system:String>
+    <system:String x:Key="Str_Help_PtToReduce">pts to reduce rapid variations.</system:String>
+    <system:String x:Key="Str_Help_OtherGraphDesc">→ Uses the left and right Y axes to plot two quantities.</system:String>
+    <system:String x:Key="Str_Help_DataMask">→ Hides the data and shows only the moving average.</system:String>
+    <system:String x:Key="Str_Help_ExportGraph">Export Chart</system:String>
+    <system:String x:Key="Str_Help_ExportGraphDesc">→ Saves the chart as</system:String>
+    <system:String x:Key="Str_Help_OnDesktop">to the specified folder.</system:String>
+    <system:String x:Key="Str_Help_ExportFileDesc">→ Saves corrected data in</system:String>
+    <system:String x:Key="Str_Help_InfoTitle">INFO</system:String>
+    <system:String x:Key="Str_Help_Info1">Counts can be expressed in:</system:String>
+    <system:String x:Key="Str_Help_YAxis1">% Percentage relative to the mean.</system:String>
+    <system:String x:Key="Str_Help_YAxis2">σ Standard Deviations.</system:String>
+    <system:String x:Key="Str_Help_YAxis3">N Absolute counts.</system:String>
+    
+    <system:String x:Key="Str_Help_Info2">You can zoom the axes using the mouse wheel while hovering over them.</system:String>
+    <system:String x:Key="Str_Help_Info3">The confidence interval of the corrected data is visible when the time interval is ≤ 7 days.</system:String>
+    <system:String x:Key="Str_Help_Info4">Functions of the buttons on the top right bar:</system:String>
+    <system:String x:Key="Str_Help_InfoButtonHelp">"?" Opens this guide at any time.</system:String>
+    <system:String x:Key="Str_Help_InfoButtonSideBar">"🡄" Moves the Sidebar to the left or right.</system:String>
+    <system:String x:Key="Str_Help_InfoButtonTheme">"🎨" Changes theme (Light/Dark)</system:String>
+    <system:String x:Key="Str_Help_InfoButtonLan">"🌐" Changes language (Italian/English)</system:String>
+    <system:String x:Key="Str_Help_MoreInfo">More info: </system:String>
+    <system:String x:Key="Str_Help_ClickHere">Click Here.</system:String>
+
+    <!-- C# / ViewModel / Dialog Strings -->
+    <system:String x:Key="Str_Chart">Chart</system:String>
+    <system:String x:Key="Str_None">none</system:String>
+    <system:String x:Key="Str_MoveSidebarLeft">Move Sidebar to Left</system:String>
+    <system:String x:Key="Str_MoveSidebarRight">Move Sidebar to Right</system:String>
+    <system:String x:Key="Str_FilePrefix">File: </system:String>
+    <system:String x:Key="Str_Days">days</system:String>
+    <system:String x:Key="Str_Hours">hours</system:String>
+    <system:String x:Key="Str_DateRangeError">Invalid date range</system:String>
+    <system:String x:Key="Str_Warning">Warning</system:String>
+    <system:String x:Key="Str_Error">Error</system:String>
+    <system:String x:Key="Str_OpenError">Error while opening:</system:String>
+    <system:String x:Key="Str_MissingData">Missing Data</system:String>
+    <system:String x:Key="Str_MissingDataFound">Missing data found:</system:String>
+    <system:String x:Key="Str_BetaEstimation">Beta Estimation</system:String>
+    <system:String x:Key="Str_RawCountsTitle">Raw Counts</system:String>
+    <system:String x:Key="Str_CorrectedCountsTitle">Corrected Counts</system:String>
+    <system:String x:Key="Str_CorrectedCountsPTTitle">Corrected Counts (PT)</system:String>
+    <system:String x:Key="Str_PressureTitle">Pressure</system:String>
+    <system:String x:Key="Str_PressureUnitTitle">Pressure (hPa)</system:String>
+    <system:String x:Key="Str_TemperatureTitle">Temperature</system:String>
+    <system:String x:Key="Str_TemperatureUnitTitle">Temperature (°C)</system:String>
+    <system:String x:Key="Str_CorrectedCountsP">Corrected Counts P</system:String>
+    <system:String x:Key="Str_CorrectedCountsPT">Corrected Counts PT</system:String>
+    <system:String x:Key="Str_ChartExportSuccess">Chart successfully exported to folder:&#x0a;{0}&#x0a;Open the export folder?</system:String>
+    <system:String x:Key="Str_ExportChartTitle">Export Chart</system:String>
+    <system:String x:Key="Str_FileExportSuccess">File successfully exported to folder:&#x0a;{0}&#x0a;Open the export folder?</system:String>
+    <system:String x:Key="Str_ExportFileTitle">Export File</system:String>
+    <system:String x:Key="Str_WrongFormat">Invalid format</system:String>
+    <system:String x:Key="Str_FileOriginal">### Original File: </system:String>
+    <system:String x:Key="Str_CorrParams">### Pressure and temperature correction parameters:</system:String>
+    <system:String x:Key="Str_EstimatedFrom">### 		(estimated from EKAR 2024_09 - 2025_11 data, valid only for this detector.)</system:String>
+    <system:String x:Key="Str_OutlierRemoval">### Outlier Removal:	</system:String>
+    <system:String x:Key="Str_TabSeparated">### TAB separated data</system:String>
+
+    <system:String x:Key="Str_DataCount"> | Data: </system:String>
+    <system:String x:Key="Str_MeanValue">Mean Value: </system:String>
+    <system:String x:Key="Str_StandardDeviations">Standard Deviations (σ)</system:String>
+    <system:String x:Key="Str_PercentFromAvg">% from avg</system:String>
+    <system:String x:Key="Str_AbsoluteCounts">Counts</system:String>
+
+    <system:String x:Key="Str_Yes">Yes</system:String>
+    <system:String x:Key="Str_No">No</system:String>
+    <system:String x:Key="Str_OK">OK</system:String>
+
+</ResourceDictionary>

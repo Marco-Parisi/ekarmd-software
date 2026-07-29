@@ -1,0 +1,144 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- Title bar & Commands -->
+    <system:String x:Key="Str_HelpTooltip">Mostra/Nascondi Guida</system:String>
+    <system:String x:Key="Str_ThemeTooltip">Cambia Tema</system:String>
+    <system:String x:Key="Str_LanguageTooltip">Cambia Lingua (Italiano / Inglese)</system:String>
+
+    <!-- Flyouts & Axis Selector -->
+    <system:String x:Key="Str_OtherGraph">Altro Grafico</system:String>
+    <system:String x:Key="Str_LeftYAxis">Asse Y Sinistro</system:String>
+    <system:String x:Key="Str_RightYAxis">Asse Y Destro</system:String>
+    <system:String x:Key="Str_RawCountsShort">Cont. Grezzi</system:String>
+    <system:String x:Key="Str_PressCorrShort">Cont. Corr. Press.</system:String>
+    <system:String x:Key="Str_PressTempCorrShort">Cont. Corr. Press. e Temp.</system:String>
+    <system:String x:Key="Str_PressureShort">Pressione</system:String>
+    <system:String x:Key="Str_TemperatureShort">Temperatura</system:String>
+
+    <!-- Sidebar Section Headers & Controls -->
+    <system:String x:Key="Str_FileHeader">📂  File</system:String>
+    <system:String x:Key="Str_OpenFile">Apri File</system:String>
+    <system:String x:Key="Str_DataCorrectionHeader">🔧  Correzione Dati</system:String>
+    <system:String x:Key="Str_RemoveOutliers">Rimuovi Outliers</system:String>
+    <system:String x:Key="Str_OutlierSigma">Outlier Sigma:</system:String>
+    <system:String x:Key="Str_BarometricCoeff">Coefficiente Barometrico</system:String>
+    <system:String x:Key="Str_EstimateBeta">Stima Beta</system:String>
+    <system:String x:Key="Str_SavedBeta">Valore β salvato:  </system:String>
+    <system:String x:Key="Str_GraphsHeader">📊  Grafici</system:String>
+    <system:String x:Key="Str_RawCounts">Cont. Grezzi</system:String>
+    <system:String x:Key="Str_CorrectedCounts">Cont. Corretti</system:String>
+    <system:String x:Key="Str_Pressure">Pressione</system:String>
+    <system:String x:Key="Str_Temperature">Temperatura</system:String>
+    <system:String x:Key="Str_OtherGraphBtn">Altro Grafico...</system:String>
+    <system:String x:Key="Str_OptionsHeader">⚙  Opzioni</system:String>
+    <system:String x:Key="Str_MovingAverage">Media Mobile:</system:String>
+    <system:String x:Key="Str_TempCorrection">Corr. Temperatura</system:String>
+    <system:String x:Key="Str_EkarOnlyTooltip">Valido solo per il rilevatore EKAR</system:String>
+    <system:String x:Key="Str_DataMask">Maschera Dati</system:String>
+    <system:String x:Key="Str_ExportHeader">💾  Esporta</system:String>
+    <system:String x:Key="Str_ExportFile">Esporta File Dati</system:String>
+
+    <!-- Chart Toolbar -->
+    <system:String x:Key="Str_ChartMode">Modalità</system:String>
+    <system:String x:Key="Str_ChartMode_Points">Punti</system:String>
+    <system:String x:Key="Str_ChartMode_Line">Linea</system:String>
+    <system:String x:Key="Str_DateSelection">Selezione Date</system:String>
+    <system:String x:Key="Str_From">Dal:</system:String>
+    <system:String x:Key="Str_To">Al:</system:String>
+    <system:String x:Key="Str_YAxis">Asse Y</system:String>
+    <system:String x:Key="Str_PercentTooltip">Percentuale rispetto alla media</system:String>
+    <system:String x:Key="Str_SigmaTooltip">Deviazioni standard dalla media</system:String>
+    <system:String x:Key="Str_AbsoluteTooltip">Valore conteggi grezzi</system:String>
+    <system:String x:Key="Str_GraphCommands">Comandi Grafico</system:String>
+    <system:String x:Key="Str_Reset">Reset</system:String>
+    <system:String x:Key="Str_Stretch">Adatta</system:String>
+    <system:String x:Key="Str_Export">Esporta</system:String>
+
+    <!-- Welcome / Help Screen -->
+    <system:String x:Key="Str_Help_ClickOn">Cliccare su</system:String>
+    <system:String x:Key="Str_Help_ToReadData">per iniziare.</system:String>
+    <system:String x:Key="Str_Help_BetaNote">Utilizzare un file con almeno 2 mesi di dati per stimare Beta β (il valore rimane salvato)</system:String>
+    <system:String x:Key="Str_Help_DataFormat">FORMATO DEI DATI</system:String>
+    <system:String x:Key="Str_Help_FormatInfo">File di testo (.txt o .csv) con 4 colonne separate da * oppure da virgola:</system:String>
+    <system:String x:Key="Str_Help_DateAndTime">Data e Ora</system:String>
+    <system:String x:Key="Str_Help_Temp">Temperatura</system:String>
+    <system:String x:Key="Str_Help_Pressure">Pressione</system:String>
+    <system:String x:Key="Str_Help_Counts">Conteggi</system:String>
+    <system:String x:Key="Str_Help_GuideTitle">OPZIONI</system:String>
+    <system:String x:Key="Str_Help_OutliersDesc">→ Sostituisce i dati fuori dall'intervallo</system:String>
+    <system:String x:Key="Str_Help_MeanPlusMinus">Media ± Nσ</system:String>
+    <system:String x:Key="Str_Help_WithAdjacent">con il valore medio.</system:String>
+    <system:String x:Key="Str_Help_TempCorrDesc">→ Corregge i dati dalla temperatura per il rilevatore</system:String>
+    <system:String x:Key="Str_Help_EkarBold">EKAR.</system:String>
+    <system:String x:Key="Str_Help_MovingAvgDesc">→ Plotta una linea di interpolazione tra</system:String>
+    <system:String x:Key="Str_Help_PtToReduce">dati per attenuare le variazioni rapide.</system:String>
+    <system:String x:Key="Str_Help_OtherGraphDesc">→ Utilizza l'asse delle ordinate destro e sinistro per plottare due grandezze.</system:String>
+    <system:String x:Key="Str_Help_DataMask">→ Nasconde i dati e mostra solo la media mobile.</system:String>
+    <system:String x:Key="Str_Help_ExportGraph">Esporta Grafico</system:String>
+    <system:String x:Key="Str_Help_ExportGraphDesc">→ Salva il grafico in</system:String>
+    <system:String x:Key="Str_Help_OnDesktop">sulla cartella specificata.</system:String>
+    <system:String x:Key="Str_Help_ExportFileDesc">→ Salva i dati corretti in</system:String>
+    <system:String x:Key="Str_Help_InfoTitle">INFO</system:String>
+    <system:String x:Key="Str_Help_Info1">I conteggi possono essere riportati in:</system:String>
+    <system:String x:Key="Str_Help_YAxis1">% Percentuale rispetto alla media.</system:String>
+    <system:String x:Key="Str_Help_YAxis2">σ Deviazioni Standard.</system:String>
+    <system:String x:Key="Str_Help_YAxis3">N Conteggi interi.</system:String>
+    
+    <system:String x:Key="Str_Help_Info2">Si possono ingrandire gli assi usando la rotella del mouse quando il puntatore è su uno di essi.</system:String>
+    <system:String x:Key="Str_Help_Info3">L'intervallo di confidenza dei dati corretti è visibile quando l'asse temporale è ≤ 7 giorni.</system:String>
+    <system:String x:Key="Str_Help_Info4">Funzioni dei pulsanti in alto a destra sulla barra:</system:String>
+    <system:String x:Key="Str_Help_InfoButtonHelp">"?" Apre questa guida in qualsiasi momento.</system:String>
+    <system:String x:Key="Str_Help_InfoButtonSideBar">"🡄" Sposta la Barra Laterale a destra o sinistra.</system:String>
+    <system:String x:Key="Str_Help_InfoButtonTheme">"🎨" Cambia tema (Bianco/Scuro)</system:String>
+    <system:String x:Key="Str_Help_InfoButtonLan">"🌐" Cambia lingua (Italiano/Inglese)</system:String>
+    <system:String x:Key="Str_Help_MoreInfo">Altre info: </system:String>
+    <system:String x:Key="Str_Help_ClickHere">Clicca Qui.</system:String>
+
+    <!-- C# / ViewModel / Dialog Strings -->
+    <system:String x:Key="Str_Chart">Grafico</system:String>
+    <system:String x:Key="Str_None">nessuno</system:String>
+    <system:String x:Key="Str_MoveSidebarLeft">Sposta Sidebar a Sinistra</system:String>
+    <system:String x:Key="Str_MoveSidebarRight">Sposta Sidebar a Destra</system:String>
+    <system:String x:Key="Str_FilePrefix">File: </system:String>
+    <system:String x:Key="Str_Days">giorni</system:String>
+    <system:String x:Key="Str_Hours">ore</system:String>
+    <system:String x:Key="Str_DateRangeError">Intervallo date errato</system:String>
+    <system:String x:Key="Str_Warning">Attenzione</system:String>
+    <system:String x:Key="Str_Error">Errore</system:String>
+    <system:String x:Key="Str_OpenError">Errore durante l'apertura:</system:String>
+    <system:String x:Key="Str_MissingData">Dati Mancanti</system:String>
+    <system:String x:Key="Str_MissingDataFound">Sono stati trovati dei dati mancanti:</system:String>
+    <system:String x:Key="Str_BetaEstimation">Stima Beta</system:String>
+    <system:String x:Key="Str_RawCountsTitle">Conteggi Grezzi</system:String>
+    <system:String x:Key="Str_CorrectedCountsTitle">Conteggi Corretti</system:String>
+    <system:String x:Key="Str_CorrectedCountsPTTitle">Conteggi Corretti (PT)</system:String>
+    <system:String x:Key="Str_PressureTitle">Pressione</system:String>
+    <system:String x:Key="Str_PressureUnitTitle">Pressione (hPa)</system:String>
+    <system:String x:Key="Str_TemperatureTitle">Temperatura</system:String>
+    <system:String x:Key="Str_TemperatureUnitTitle">Temperatura (°C)</system:String>
+    <system:String x:Key="Str_CorrectedCountsP">Conteggi Corretti P</system:String>
+    <system:String x:Key="Str_CorrectedCountsPT">Conteggi Corretti PT</system:String>
+    <system:String x:Key="Str_ChartExportSuccess">Grafico esportato correttamente nella cartella:&#x0a;{0}&#x0a;Aprire la cartella di esportazione?</system:String>
+    <system:String x:Key="Str_ExportChartTitle">Esporta Grafico</system:String>
+    <system:String x:Key="Str_FileExportSuccess">File esportato correttamente nella cartella:&#x0a;{0}&#x0a;Aprire la cartella di esportazione?</system:String>
+    <system:String x:Key="Str_ExportFileTitle">Esporta File</system:String>
+    <system:String x:Key="Str_WrongFormat">Formato errato</system:String>
+    <system:String x:Key="Str_FileOriginal">### File Originale: </system:String>
+    <system:String x:Key="Str_CorrParams">### Parametri di correzione pressione e temperatura:</system:String>
+    <system:String x:Key="Str_EstimatedFrom">### 		(stimato dai dati 2024_09 - 2025_11 di EKAR quindi valido solo per questo rilevatore.)</system:String>
+    <system:String x:Key="Str_OutlierRemoval">### Rimozione Outlier:	</system:String>
+    <system:String x:Key="Str_TabSeparated">### Dati separati da TAB</system:String>
+
+    <system:String x:Key="Str_DataCount"> | Dati: </system:String>
+    <system:String x:Key="Str_MeanValue">Valore Medio: </system:String>
+    <system:String x:Key="Str_StandardDeviations">Deviazioni Standard (σ)</system:String>
+    <system:String x:Key="Str_PercentFromAvg">% dalla media</system:String>
+    <system:String x:Key="Str_AbsoluteCounts">Conteggi</system:String>
+
+    <system:String x:Key="Str_Yes">Sì</system:String>
+    <system:String x:Key="Str_No">No</system:String>
+    <system:String x:Key="Str_OK">OK</system:String>
+
+</ResourceDictionary>

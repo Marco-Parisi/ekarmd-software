@@ -1,9 +1,6 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MuonDetectorReader.Utils
 {
@@ -27,14 +24,10 @@ namespace MuonDetectorReader.Utils
             {
                 if (cleanedData[i] < lowerBound || cleanedData[i] > upperBound)
                 {
-                    if (i == 0)
-                        cleanedData[i] = cleanedData[i + 1];
-                    else if (i == cleanedData.Count - 1)
-                        cleanedData[i] = cleanedData[i - 1];
-                    else
-                        cleanedData[i] = (uint)((cleanedData[i - 1] + cleanedData[i + 1]) / 2.00);
+                    cleanedData[i] = mean;
                 }
             }
+
             return cleanedData;
         }
 
@@ -63,7 +56,7 @@ namespace MuonDetectorReader.Utils
                     else if (i == cleanedData.Count - 1)
                         cleanedData[i] = cleanedData[i - 1];
                     else
-                        cleanedData[i] = (uint)((cleanedData[i - 1] + cleanedData[i + 1]) / 2.00);
+                        cleanedData[i] = ((cleanedData[i - 1] + cleanedData[i + 1]) / 2.00);
                 }
             }
             return cleanedData;

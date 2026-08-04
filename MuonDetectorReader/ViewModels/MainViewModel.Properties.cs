@@ -113,6 +113,9 @@ namespace MuonDetectorReader.ViewModels
         private bool _isYAxisModeEnabled;
         public bool IsYAxisModeEnabled { get => _isYAxisModeEnabled; set => SetProperty(ref _isYAxisModeEnabled, value); }
 
+        private bool _isYAxisScaleEnabled;
+        public bool IsYAxisScaleEnabled { get => _isYAxisScaleEnabled; set => SetProperty(ref _isYAxisScaleEnabled, value); }
+
         private bool _isYAxisPercentage = true;
         public bool IsYAxisPercentage
         {

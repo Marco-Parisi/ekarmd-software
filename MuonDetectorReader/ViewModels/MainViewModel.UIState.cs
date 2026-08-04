@@ -82,7 +82,7 @@ namespace MuonDetectorReader.ViewModels
             }
 
             IsGraphPanelEnabled = true;
-            IsAvgSliderEnabled = tag != "Press" && tag != "Temp";
+            IsYAxisScaleEnabled = IsAvgSliderEnabled = tag != "Press" && tag != "Temp";
             IsShowHideDataEnabled = isSmoothOn && tag != "Press" && tag != "Temp";
             IsOutlierBoxEnabled = true; // (tag != "Press" && tag != "Temp");
             IsOutlierSliderEnabled = IsOutlierBoxEnabled && IsOutlierChecked;
@@ -142,6 +142,7 @@ namespace MuonDetectorReader.ViewModels
                 IsMessageVisible = false;
                 IsYAxisModeEnabled = true;
                 IsDatePickerEnabled = true;
+                IsYAxisScaleEnabled = false;
             }
         }
 

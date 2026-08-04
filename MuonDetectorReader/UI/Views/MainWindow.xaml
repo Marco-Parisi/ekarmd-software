@@ -504,7 +504,7 @@
                             </StackPanel>
 
                             <!-- Y-Axis mode selector -->
-                            <StackPanel Grid.Column="2" IsEnabled="{Binding IsYAxisModeEnabled}" Width="100">
+                            <StackPanel Grid.Column="2" IsEnabled="{Binding IsYAxisScaleEnabled}" Width="100">
                                 <TextBlock Text="{DynamicResource Str_YAxis}" HorizontalAlignment="Center" Margin="2" FontWeight="SemiBold"/>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <RadioButton GroupName="YAxisMode"

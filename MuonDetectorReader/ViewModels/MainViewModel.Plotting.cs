@@ -455,6 +455,7 @@ namespace MuonDetectorReader.ViewModels
                 MajorGridlineStyle = LineStyle.Dot,
                 MinorGridlineStyle = LineStyle.Dot,
                 Angle = -35,
+                Title = _localizationService.GetString("Str_Help_DateAndTime"),
                 MinimumMajorStep = 1 / 24.0,
                 Maximum = dateMax,
                 Minimum = dateMin,
